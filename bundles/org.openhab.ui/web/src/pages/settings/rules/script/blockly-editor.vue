@@ -333,17 +333,6 @@
             helpUrl="https://www.openhab.org/docs/configuration/blockly/rules-blockly-items-things.html"
             text="Help"
             callbackKey="ohBlocklyHelp" />
-          <block type="oh_item" />
-          <block type="oh_getitem">
-            <value name="itemName">
-              <shadow type="oh_item" />
-            </value>
-          </block>
-          <block type="oh_groupmembers">
-            <value name="groupName">
-              <shadow type="oh_item" />
-            </value>
-          </block>
           <block type="oh_getitem_state">
             <value name="itemName">
               <shadow type="oh_item" />
@@ -358,6 +347,16 @@
               </shadow>
             </value>
           </block>
+          <block type="oh_getitem">
+            <value name="itemName">
+              <shadow type="oh_item" />
+            </value>
+          </block>
+          <block type="oh_groupmembers">
+            <value name="groupName">
+              <shadow type="oh_item" />
+            </value>
+          </block>
           <block type="oh_event">
             <value name="value">
               <shadow type="text">
@@ -368,13 +367,14 @@
               <shadow type="oh_item" />
             </value>
           </block>
+          <block type="oh_item" />
           <sep gap="48" />
-          <block type="oh_thing" />
           <block type="oh_getthing_state">
             <value name="thingUid">
               <shadow type="oh_thing" />
             </value>
           </block>
+          <block type="oh_thing" />
         </category>
 
         <category name="Timers &amp; Delays">
@@ -902,6 +902,7 @@
 
 <script>
 import Blockly from 'blockly'
+import { ZoomToFitControl } from '@blockly/zoom-to-fit'
 import Vue from 'vue'
 
 import defineOHBlocks from '@/assets/definitions/blockly'
@@ -986,8 +987,20 @@ export default {
         toolbox: this.$refs.toolbox,
         horizontalLayout: !this.$device.desktop,
         theme: this.$f7.data.themeOptions.dark === 'dark' ? 'dark' : undefined,
+        zoom:
+          {
+            controls: true,
+            wheel: true,
+            startScale: 1.0,
+            maxScale: 3,
+            minScale: 0.3,
+            scaleSpeed: 1.2,
+            pinch: true
+          },
         trashcan: false
       })
+      const zoomToFit = new ZoomToFitControl(this.workspace)
+      zoomToFit.init()
       this.registerLibraryCallbacks(libraryDefinitions)
       const xml = Blockly.Xml.textToDom(this.blocks)
       Blockly.Xml.domToWorkspace(xml, this.workspace)

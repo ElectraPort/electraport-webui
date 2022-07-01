@@ -47,7 +47,23 @@
                 vm.value = "N/A";
                 return;
             }
+
             var value = item.transformedState || item.state;
+            
+            function filterOption(option, i, options) {
+                if (option.value === item.state) return true;
+                return false;
+            }
+            if (vm.widget.usedescription) {
+                var options = item.stateDescription.options;
+                if (angular.isArray(options) && $filter('filter')(options, filterOption, true).length > 0) {
+                    var option = $filter('filter')(options, filterOption, true)[0];
+                    if (option.label) {
+                        value = option.label;
+                    }
+                }
+            }
+
             if (vm.widget.format) {
                 if (item.type === "DateTime" || item.type === "DateTimeItem") {
                     value = $filter('date')(value, vm.widget.format);
@@ -105,7 +121,9 @@
             icon             : widget.icon,
             icon_size        : widget.icon_size,
             icon_nolinebreak : widget.icon_nolinebreak,
-            icon_replacestext: widget.icon_replacestext
+            icon_replacestext: widget.icon_replacestext,
+            value_color      : widget.value_color,
+            usedescription   : widget.usedescription
         };
 
         $scope.dismiss = function() {
